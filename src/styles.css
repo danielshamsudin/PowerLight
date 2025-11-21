@@ -1,0 +1,68 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  background: transparent;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+#app {
+  background: rgba(30, 30, 30, 0.95);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  height: 72px;
+  transition: height 0.15s ease;
+}
+
+#search-input {
+  width: 100%;
+  padding: 20px 24px;
+  font-size: 20px;
+  background: transparent;
+  border: none;
+  color: #fff;
+  outline: none;
+}
+
+#search-input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+#results {
+  flex: 1;
+  overflow: hidden;
+}
+
+.result-item {
+  padding: 12px 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #fff;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.result-item:hover,
+.result-item.selected {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.result-name {
+  font-size: 14px;
+}
+
+.result-path {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
