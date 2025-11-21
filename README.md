@@ -9,10 +9,12 @@ A blazingly fast, lightweight application launcher for Windows built with Rust a
 
 - **🚀 Lightning Fast** - Built with Rust for instant search results
 - **🔍 Fuzzy Search** - Find apps even with typos or partial names
+- **📁 File Search** - Search documents, images, videos, code files and more
 - **⌨️ Global Hotkey** - Press `Ctrl+Alt+Space` to launch from anywhere
 - **🎨 Modern UI** - Clean, minimal dark interface with transparency
+- **🏷️ Type Badges** - Color-coded badges for apps, documents, images, videos, etc.
 - **💾 Lightweight** - Small memory footprint, runs in system tray
-- **📦 Auto-Indexing** - Automatically indexes Start Menu applications
+- **📦 Auto-Indexing** - Automatically indexes Start Menu applications and common directories
 - **🎯 Keyboard Navigation** - Arrow keys to navigate, Enter to launch, Esc to close
 
 ## 📥 Installation
@@ -63,6 +65,25 @@ Powerlight runs in the system tray when not in use. Right-click the icon for:
 - **Show Powerlight** - Open the search window
 - **Quit** - Exit the application
 
+### Indexed Locations
+
+Powerlight automatically indexes:
+- **Applications** - Start Menu shortcuts and programs
+- **Documents** - Your Documents folder (up to 3 levels deep)
+- **Downloads** - Your Downloads folder (up to 3 levels deep)
+- **Desktop** - Files on your Desktop (up to 3 levels deep)
+- **Pictures** - Your Pictures folder (up to 3 levels deep)
+- **Videos** - Your Videos folder (up to 3 levels deep)
+- **Music** - Your Music folder (up to 3 levels deep)
+
+**Supported file types:**
+- Documents: `.txt`, `.pdf`, `.doc`, `.docx`, `.xls`, `.xlsx`, `.ppt`, `.pptx`
+- Images: `.jpg`, `.png`, `.gif`, `.bmp`, `.svg`, `.webp`
+- Videos: `.mp4`, `.avi`, `.mkv`, `.mov`, `.wmv`
+- Audio: `.mp3`, `.wav`, `.flac`, `.aac`, `.ogg`
+- Code: `.rs`, `.js`, `.ts`, `.py`, `.java`, `.c`, `.cpp`, `.html`, `.css`, `.json`
+- Archives: `.zip`, `.rar`, `.7z`, `.tar`, `.gz`
+
 ## ⚙️ Configuration
 
 ### Changing the Hotkey
@@ -103,7 +124,7 @@ powerlight/
 
 ## 🗺️ Roadmap
 
-- [ ] File search (documents, images, etc.)
+- [x] File search (documents, images, etc.)
 - [ ] Calculator functionality
 - [ ] Web search integration
 - [ ] Settings UI (customize hotkey, theme)
@@ -111,6 +132,8 @@ powerlight/
 - [ ] Search history
 - [ ] Usage analytics (rank by frequency)
 - [ ] Plugin system
+- [ ] Configurable file types and directories
+- [ ] Real-time file system watching
 
 ## 🤝 Contributing
 

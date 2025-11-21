@@ -16,12 +16,13 @@ const appContainer = document.getElementById("app")!;
 
 let debounceTimer: number;
 
-console.log("Powerlight initialized");
+searchInput.focus();
 
 searchInput.addEventListener("input", () => {
   clearTimeout(debounceTimer);
   debounceTimer = setTimeout(async () => {
     const query = searchInput.value.trim();
+
     if (query.length === 0) {
       results = [];
       renderResults();
@@ -36,12 +37,13 @@ searchInput.addEventListener("input", () => {
   }, 100);
 });
 
-// Global keydown handler
 window.addEventListener("keydown", async (e) => {
-  console.log("Key pressed:", e.key);
+  if (e.key.length === 1 && !e.ctrlKey && !e.altKey && !e.metaKey) {
+    searchInput.focus();
+    return;
+  }
 
   if (e.key === "Escape") {
-    console.log("Escape pressed, hiding window");
     e.preventDefault();
     e.stopPropagation();
     await hideWindow();
@@ -50,6 +52,7 @@ window.addEventListener("keydown", async (e) => {
 
   if (e.key === "ArrowDown") {
     e.preventDefault();
+    e.stopPropagation();
     if (results.length > 0) {
       selectedIndex = Math.min(selectedIndex + 1, results.length - 1);
       renderResults();
@@ -59,6 +62,7 @@ window.addEventListener("keydown", async (e) => {
 
   if (e.key === "ArrowUp") {
     e.preventDefault();
+    e.stopPropagation();
     if (results.length > 0) {
       selectedIndex = Math.max(selectedIndex - 1, 0);
       renderResults();
@@ -68,36 +72,28 @@ window.addEventListener("keydown", async (e) => {
 
   if (e.key === "Enter") {
     e.preventDefault();
+    e.stopPropagation();
     if (results.length > 0) {
-      console.log("Enter pressed, launching app");
       await launchSelected();
     }
     return;
   }
-}, true); // Use capture phase
+});
 
 async function hideWindow() {
-  console.log("Hiding window...");
   const window = getCurrentWindow();
   searchInput.value = "";
   results = [];
   renderResults();
   await updateWindowHeight();
   await window.hide();
-  console.log("Window hidden");
 }
 
 async function launchSelected() {
   const selected = results[selectedIndex];
-  console.log("Launching:", selected);
   if (selected) {
-    try {
-      await invoke("launch", { path: selected.path });
-      console.log("Launch command sent, hiding window");
-      await hideWindow();
-    } catch (e) {
-      console.error("Failed to launch:", e);
-    }
+    await invoke("launch", { path: selected.path });
+    await hideWindow();
   }
 }
 
@@ -106,8 +102,11 @@ function renderResults() {
     .map(
       (r, i) => `
       <div class="result-item ${i === selectedIndex ? "selected" : ""}" data-index="${i}">
-        <div>
-          <div class="result-name">${escapeHtml(r.name)}</div>
+        <div class="result-content">
+          <div class="result-header">
+            <div class="result-name">${escapeHtml(r.name)}</div>
+            <span class="result-badge badge-${r.kind}">${r.kind}</span>
+          </div>
           <div class="result-path">${escapeHtml(r.path)}</div>
         </div>
       </div>
@@ -118,7 +117,6 @@ function renderResults() {
   // Re-attach click handlers
   resultsContainer.querySelectorAll(".result-item").forEach((el) => {
     el.addEventListener("click", async (e) => {
-      console.log("Result clicked");
       e.preventDefault();
       e.stopPropagation();
       const index = parseInt(el.getAttribute("data-index")!);
@@ -135,25 +133,16 @@ async function updateWindowHeight() {
   const resultCount = Math.min(results.length, maxVisibleResults);
   const newHeight = baseHeight + resultCount * itemHeight;
 
-  console.log(`Updating height to ${newHeight}px for ${results.length} results`);
-
-  // Update container height
   appContainer.style.height = `${newHeight}px`;
 
-  // Show scrollbar if more than 4 results
   if (results.length > maxVisibleResults) {
     resultsContainer.style.overflowY = "auto";
   } else {
     resultsContainer.style.overflowY = "hidden";
   }
 
-  // Update window size
-  try {
-    const window = getCurrentWindow();
-    await window.setSize(new LogicalSize(680, newHeight));
-  } catch (e) {
-    console.error("Failed to resize window:", e);
-  }
+  const window = getCurrentWindow();
+  await window.setSize(new LogicalSize(680, newHeight));
 }
 
 function escapeHtml(str: string): string {
@@ -162,16 +151,11 @@ function escapeHtml(str: string): string {
   return div.innerHTML;
 }
 
-// Focus input when window becomes visible
 getCurrentWindow().onFocusChanged(({ payload: focused }) => {
-  console.log("Focus changed:", focused);
   if (focused) {
     searchInput.focus();
     searchInput.select();
   }
 });
 
-// Initialize height
 updateWindowHeight();
-
-console.log("Event listeners attached");

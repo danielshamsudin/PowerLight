@@ -3,15 +3,30 @@ mod search;
 use search::{search_apps, SearchResult};
 use tauri::Manager;
 
+#[cfg(windows)]
+use std::os::windows::process::CommandExt;
+
 #[tauri::command]
 fn search(query: &str) -> Vec<SearchResult> {
     search_apps(query)
 }
 
 #[tauri::command]
+fn get_index_info() -> String {
+    search::get_index_info()
+}
+
+#[tauri::command]
+fn debug_search(query: &str) -> Vec<SearchResult> {
+    search::debug_search(query)
+}
+
+#[tauri::command]
 fn launch(path: &str) -> Result<(), String> {
+    // Use cmd /C start to open files with their default application
     std::process::Command::new("cmd")
         .args(["/C", "start", "", path])
+        .creation_flags(0x08000000) // CREATE_NO_WINDOW
         .spawn()
         .map_err(|e| e.to_string())?;
     Ok(())
@@ -69,6 +84,12 @@ pub fn run() {
                 })
                 .build(app)?;
 
+            // Open devtools in dev mode
+            #[cfg(debug_assertions)]
+            {
+                window.open_devtools();
+            }
+
             // Register global shortcut - try multiple options
             use tauri_plugin_global_shortcut::{GlobalShortcutExt, Shortcut, ShortcutEvent};
 
@@ -97,16 +118,13 @@ pub fn run() {
                     });
 
                     if result.is_ok() && app.global_shortcut().register(shortcut.clone()).is_ok() {
-                        println!("Registered global shortcut: {}", shortcut_str);
                         registered = true;
                         break;
                     }
                 }
             }
 
-            if !registered {
-                println!("Warning: Could not register any global shortcut. You can manually show the window.");
-            }
+            let _ = registered;
 
             // Initialize search index in background
             std::thread::spawn(|| {
@@ -115,7 +133,7 @@ pub fn run() {
 
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![search, launch])
+        .invoke_handler(tauri::generate_handler![search, launch, get_index_info, debug_search])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

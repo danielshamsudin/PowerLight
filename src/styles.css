@@ -55,8 +55,69 @@ html, body {
   background: rgba(255, 255, 255, 0.1);
 }
 
+.result-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.result-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 2px;
+}
+
 .result-name {
   font-size: 14px;
+}
+
+.result-badge {
+  font-size: 9px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.badge-app {
+  background: rgba(59, 130, 246, 0.3);
+  color: #60a5fa;
+}
+
+.badge-document {
+  background: rgba(16, 185, 129, 0.3);
+  color: #34d399;
+}
+
+.badge-image {
+  background: rgba(168, 85, 247, 0.3);
+  color: #c084fc;
+}
+
+.badge-video {
+  background: rgba(239, 68, 68, 0.3);
+  color: #f87171;
+}
+
+.badge-audio {
+  background: rgba(251, 146, 60, 0.3);
+  color: #fb923c;
+}
+
+.badge-code {
+  background: rgba(234, 179, 8, 0.3);
+  color: #fbbf24;
+}
+
+.badge-archive {
+  background: rgba(139, 92, 246, 0.3);
+  color: #a78bfa;
+}
+
+.badge-file {
+  background: rgba(156, 163, 175, 0.3);
+  color: #9ca3af;
 }
 
 .result-path {
